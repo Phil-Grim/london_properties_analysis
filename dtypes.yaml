@@ -1,0 +1,25 @@
+raw_dtypes:
+  id: int
+  Property_Link: string
+  Address: string
+  Outcode: string
+  Incode: string
+  Price: int
+  Listing_Type: string
+  Date: datetime64[ns]
+  Property_Type: string
+  Size_Sqm: float
+  Bedrooms: float
+  Bathrooms: float
+  Ground_Rent: float
+  Service_Charge: float
+  Tenure_Type: string
+  Lease_Length_Years: float
+  Estate_Agent: string
+  Nearest_Station: string
+  Distance_From_Nearest_Station_Miles: float
+  Second_Nearest_Station: string
+  Distance_From_Second_Nearest_Station_Miles: float
+  Third_Nearest_Station: string
+  Distance_From_Third_Nearest_Station_Miles: float
+  Description: string
