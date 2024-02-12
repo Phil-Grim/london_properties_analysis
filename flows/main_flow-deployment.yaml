@@ -1,0 +1,49 @@
+###
+### A complete description of a Prefect Deployment for flow 'ingest_gcp'
+###
+name: properties flow
+description: null
+version: 89e0962ab4a92b79f2c07148dbeb4d29
+# The work queue that will handle this deployment's runs
+work_queue_name: default
+work_pool_name: rightmove-managed-pool
+tags: []
+parameters: {}
+schedule:
+  cron: '0 19 * * *'
+  timezone: null
+  day_or: true
+is_schedule_active: null
+infra_overrides: {}
+infrastructure:
+  type: process
+  env: {}
+  labels: {}
+  name: null
+  command: null
+  stream_output: true
+  working_dir: null
+  block_type_slug: process
+  _block_type_slug: process
+
+###
+### DO NOT EDIT BELOW THIS LINE
+###
+flow_name: ingest_gcp
+manifest_path: null
+storage: null
+path: /home/USERNAME/london_properties_analysis/flows
+entrypoint: web_to_gcs_bq.py:main_flow
+parameter_openapi_schema:
+  title: Parameters
+  type: object
+  properties:
+    test:
+      title: test
+      default: true
+      position: 0
+      type: boolean
+  required: null
+  definitions: null
+timestamp: '2024-02-12T18:48:49.614512+00:00'
+triggers: []

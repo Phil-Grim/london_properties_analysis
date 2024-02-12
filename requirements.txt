@@ -1,0 +1,8 @@
+beautifulsoup4==4.12.3
+numpy==1.24.3
+pandas==1.5.3
+prefect==2.12.1
+prefect_gcp==0.2.3
+PyYAML==6.0
+PyYAML==6.0.1
+Requests==2.31.0
