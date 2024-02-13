@@ -1,4 +1,4 @@
-name: Run web_to_gcs_bq
+name: Manual Run
 on:
   workflow_dispatch:
     inputs:
