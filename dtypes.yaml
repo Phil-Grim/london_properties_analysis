@@ -6,7 +6,7 @@ raw_dtypes:
   Incode: string
   Price: int
   Listing_Type: string
-  Date: datetime64[ns]
+  Date: string
   Property_Type: string
   Size_Sqm: float
   Bedrooms: float
