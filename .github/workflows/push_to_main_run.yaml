@@ -1,4 +1,4 @@
-name: Run flow on push
+name: Run on Push
 on:
   push:
     branches:
@@ -27,4 +27,4 @@ jobs:
 
       - name: Prefect Deploy
         run: |
-          python flows/web_to_gcs_bq.py
+          python flows/web_to_gcs_bq.py --True

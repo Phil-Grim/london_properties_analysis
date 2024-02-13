@@ -1,12 +1,8 @@
-name: Manual Run
+name: Scheduled Run
 on:
-  workflow_dispatch:
-    inputs:
-      test:
-        description: Run a test flow
-        required: true
-        default: true
-        type: boolean
+  schedule:
+    - cron: '0 14 * * *'
+
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -30,4 +26,4 @@ jobs:
 
       - name: Prefect Deploy
         run: |
-          python flows/web_to_gcs_bq.py --${{ github.events.inputs.test }}
+          python flows/web_to_gcs_bq.py --True

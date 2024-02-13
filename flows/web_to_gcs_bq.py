@@ -107,8 +107,12 @@ def get_rightmove_results(url: str, test: bool) -> list:
 def scrape_page(url_suffixs: list) -> list:
     """Scrapes a list of rightmove pages for data. Returns data in the form of a list of dictionaries."""
 
+    # used for rate limiting at the bottom of the for loop
+    index = 0
+
     data_rows = []
     for suffix in url_suffixs:
+
         
         url_base = 'https://www.rightmove.co.uk'
         url = url_base + suffix
@@ -118,12 +122,12 @@ def scrape_page(url_suffixs: list) -> list:
         }
 
         try:
-            page = requests.get(url, headers=headers, timeout=5)
+            page = requests.get(url, headers=headers, timeout=40)
         except requests.ConnectionError:
             t = random.uniform(30, 90)
             print(f"CONNECTION ERROR. Waiting {t} seconds.")
             time.sleep(t)
-            page = requests.get(url, headers=headers, timeout=5)
+            page = requests.get(url, headers=headers, timeout=40)
         
         soup = bs(page.content, 'html.parser')
 
@@ -262,6 +266,18 @@ def scrape_page(url_suffixs: list) -> list:
         }
 
         data_rows.append(row)
+
+        # rate limiting:
+        t  = random.uniform(2,5)
+        if index % 50 == 0 and index != 0:
+            t = t * 5
+            print(f"Sleeping {t:.2f} seconds")
+            time.sleep(t)
+        elif index % 4 == 0 and index != 0:
+            print(f"Sleeping {t:.2f} seconds")
+            time.sleep(t)       
+        index += 1
+
     return data_rows 
 
 
