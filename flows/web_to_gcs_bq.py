@@ -273,7 +273,7 @@ def clean(rows_list: list) -> pd.DataFrame:
 
     df = pd.DataFrame(rows_list)
     with open("./dtypes.yaml", "rb") as schema_yaml:
-        schema = safe_load(schema_yaml)["raw_dtypes"]
+        schema = safe_load(schema_yaml)["raw_dtypes"] 
 
     try:
         df = df.astype(schema)
