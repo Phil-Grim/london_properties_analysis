@@ -15,6 +15,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: 3.11
+
+      - name: Python dependencies
+        run: |
+          pip install -r requirements.txt
       
       - name: Prefect Cloud login
         run: |
@@ -23,5 +27,4 @@ jobs:
 
       - name: Prefect Deploy
         run: |
-          pip install -r requirements.txt
           python flows/web_to_gcs_bq.py
