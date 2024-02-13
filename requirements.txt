@@ -6,3 +6,4 @@ prefect_gcp==0.2.3
 prefect_gcp[big_query]
 PyYAML==6.0.1
 Requests==2.31.0
+pyarrow
