@@ -27,4 +27,4 @@ jobs:
 
       - name: Prefect Deploy
         run: |
-          python flows/web_to_gcs_bq.py --True
+          python flows/web_to_gcs_bq.py --test=True

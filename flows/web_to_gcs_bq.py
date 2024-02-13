@@ -14,6 +14,7 @@ import random
 import time
 from yaml import safe_load
 import json 
+import argparse
 
 
 def extract_rightmove_url(
@@ -358,8 +359,13 @@ def main_flow(test: bool = True):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--test", default=True, type=bool)
+    args = parser.parse_args()
 
-    main_flow()
+    test = args.test
+
+    main_flow(test)
 
 
 
