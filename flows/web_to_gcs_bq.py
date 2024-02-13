@@ -272,20 +272,20 @@ def clean(rows_list: list) -> pd.DataFrame:
     Depends on dtypes.yaml."""
 
     df = pd.DataFrame(rows_list)
-    # with open("./dtypes.yaml", "rb") as schema_yaml:
-    #     schema = safe_load(schema_yaml)["raw_dtypes"]
+    with open("../dtypes.yaml", "rb") as schema_yaml:
+        schema = safe_load(schema_yaml)["raw_dtypes"]
 
-    # try:
-    #     df = df.astype(schema)
-    # except BaseException as error:
-    #     today = datetime.today().strftime("%Y-%m-%d")
-    #     df.to_csv(f"/tmp/{today}_failed.csv")
-    #     gcs_block = GcsBucket.load('london-properties')
-    #     gcs_block.upload_from_path(
-    #         from_path=f"/tmp/{today}_failed.csv",
-    #         to_path=f"raw_daily_data/failed/{today}_daily_london_failed.csv",
-    #     )
-    #     raise Exception("The dataframe doesn't conform to the specified schema. Dataframe has been loaded to 'failed' directory in the GCS bucket.")
+    try:
+        df = df.astype(schema)
+    except BaseException as error:
+        today = datetime.today().strftime("%Y-%m-%d")
+        df.to_csv(f"/tmp/{today}_failed.csv")
+        gcs_block = GcsBucket.load('london-properties')
+        gcs_block.upload_from_path(
+            from_path=f"/tmp/{today}_failed.csv",
+            to_path=f"raw_daily_data/failed/{today}_daily_london_failed.csv",
+        )
+        raise Exception("The dataframe doesn't conform to the specified schema. Dataframe has been loaded to 'failed' directory in the GCS bucket.")
 
     return df
 
