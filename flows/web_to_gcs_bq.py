@@ -272,7 +272,7 @@ def clean(rows_list: list) -> pd.DataFrame:
     Depends on dtypes.yaml."""
 
     df = pd.DataFrame(rows_list)
-    with open("../dtypes.yaml", "rb") as schema_yaml:
+    with open("./dtypes.yaml", "rb") as schema_yaml:
         schema = safe_load(schema_yaml)["raw_dtypes"]
 
     try:
