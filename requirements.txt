@@ -3,7 +3,7 @@ numpy==1.24.3
 pandas==1.5.3
 prefect==2.12.1 # now have 2.14.18
 prefect_gcp==0.2.3
-prefect_gcp[big_query]
+prefect_gcp[bigquery]
 prefect_gcp[cloud_storage]
 PyYAML==6.0.1
 Requests==2.31.0
