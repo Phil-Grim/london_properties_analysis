@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+    - name: staging
+      database: evident-display-410312
+      schema: properties_dataset
+
+      tables:
+          - name: raw_london_properties
