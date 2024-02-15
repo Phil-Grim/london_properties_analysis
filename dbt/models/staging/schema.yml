@@ -7,3 +7,4 @@ sources:
 
       tables:
           - name: raw_london_properties
+          - name: london_postcode_lookup
