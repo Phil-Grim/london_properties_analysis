@@ -8,6 +8,7 @@ SELECT id,
        Outcode,
        concat(Outcode, ' ', Incode) as Postcode,
        Price,
+       Price / Bedrooms as Price_per_Bedroom
        Listing_Type,
        CAST(Date as DATE) as Date_Listed,
        Property_Type,
