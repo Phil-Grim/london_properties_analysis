@@ -46,3 +46,11 @@ JOIN {{ ref('stg_postcode_lookup') }} as l
 ON l.Postcode = p.Postcode
 WHERE Distance_From_Nearest_Station_Miles IS NOT NULL AND Distance_From_Second_Nearest_Station_Miles IS NOT NULL
 AND Distance_From_Third_Nearest_Station_Miles IS NOT NULL AND rnk = 1
+
+{% if is_incremental() %}
+
+-- {{This}} refers to target table
+-- So, we're adding rows where rows with the same id and Date_listed aren't already in the BigQuery table
+where concat(id, ' ', Date_Listed) NOT IN (SELECT concat(id, ' ', Date_Listed) FROM {{this}})
+
+{% endif %}
