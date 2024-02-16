@@ -1,6 +1,6 @@
 --dbt run --select stg_cleaned_london_properties
 
-{{ config(materialized='table') }}
+{{ config(materialized='view') }}
 
 SELECT id,
        Property_Link,
@@ -8,7 +8,8 @@ SELECT id,
        Outcode,
        concat(Outcode, ' ', Incode) as Postcode,
        Price,
-       Price / Bedrooms as Price_per_Bedroom
+       Case When Bedrooms > 0 THEN CAST(ROUND(Price / Bedrooms, 0) as int)
+       Else CAST(ROUND(Price / 1, 0) as int) End as Price_per_Bedroom ,
        Listing_Type,
        CAST(Date as DATE) as Date_Listed,
        Property_Type,
