@@ -68,7 +68,7 @@ def get_rightmove_results(url: str, test: bool) -> list:
     # Get the number of results from this query and find the number of
     # pages the query returns. First function returns a page with 48 results.
     result_count = int(soup.find("span", class_="searchHeader-resultCount").get_text().replace(',',''))
-    page_count = int(round(result_count / 48, 0)) - 1
+    page_count = int((result_count / 48))
     # Ensure we're capturing the last pages of results.
     page_count += 1 if result_count % 48 > 0 else 0
 
@@ -79,7 +79,7 @@ def get_rightmove_results(url: str, test: bool) -> list:
     for page in range(0, page_count):
         
         if page == 0:
-            continue
+            pass
         else:
             url = extract_rightmove_url(index=page * 48)
             page = requests.get(url, headers=headers)
