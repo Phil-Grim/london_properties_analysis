@@ -1,7 +1,7 @@
 name: Scheduled Run
 on:
   schedule:
-    - cron: '22 14 * * *'
+    - cron: '30 14 * * *'
 
 jobs:
   run:
@@ -26,4 +26,4 @@ jobs:
 
       - name: Prefect Deploy
         run: |
-          python flows/web_to_gcs_bq.py --test=True
+          python flows/web_to_gcs_bq.py --test=False

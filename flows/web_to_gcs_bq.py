@@ -68,7 +68,7 @@ def get_rightmove_results(url: str, test: bool) -> list:
     # Get the number of results from this query and find the number of
     # pages the query returns. First function returns a page with 48 results.
     result_count = int(soup.find("span", class_="searchHeader-resultCount").get_text().replace(',',''))
-    page_count = int(round(result_count / 48, 0)) - 1
+    page_count = int((result_count / 48))
     # Ensure we're capturing the last pages of results.
     page_count += 1 if result_count % 48 > 0 else 0
 
@@ -79,7 +79,7 @@ def get_rightmove_results(url: str, test: bool) -> list:
     for page in range(0, page_count):
         
         if page == 0:
-            continue
+            pass
         else:
             url = extract_rightmove_url(index=page * 48)
             page = requests.get(url, headers=headers)
@@ -274,7 +274,7 @@ def scrape_page(url_suffixs: list) -> list:
             t = t * 5
             print(f"Sleeping {t:.2f} seconds")
             time.sleep(t)
-        elif index % 4 == 0 and index != 0:
+        elif index % 6 == 0 and index != 0:
             print(f"Sleeping {t:.2f} seconds")
             time.sleep(t)       
         index += 1
@@ -314,6 +314,7 @@ def save_to_gcp(df: pd.DataFrame) -> None:
 
     today = datetime.today().strftime("%Y-%m-%d")
     df.to_parquet(f"/tmp/{today}.parquet")
+    print(f"the df has {df.shape[0]} rows")
 
     input_path = f"/tmp/{today}.parquet"
     output_path = f"raw_daily_data/succeeded/{today}.parquet"
@@ -355,15 +356,16 @@ def main_flow(test: bool = True):
     # creating the external table to point to the parquet files, if it doesn't already exist
     create_external_table()
 
-
+def str2bool(v):
+    return v.lower() in ('true', '1', 'yes')
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--test", default=True, type=bool)
+    parser.add_argument("--test", default="True", type=str, help="Specify 'True' or 'False'")
     args = parser.parse_args()
 
-    test = args.test
+    test = str2bool(args.test)
 
     main_flow(test)
 

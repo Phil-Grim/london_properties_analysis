@@ -5,8 +5,9 @@ on:
       test:
         description: Run a test flow
         required: true
-        default: true
-        type: boolean
+        default: 'True'
+        type: choice
+        options: ['True', 'False']
 jobs:
   run:
     runs-on: ubuntu-latest
