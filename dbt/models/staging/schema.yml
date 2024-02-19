@@ -8,3 +8,24 @@ sources:
       tables:
           - name: raw_london_properties
           - name: london_postcode_lookup
+            
+
+models:
+
+  - name: stg_cleaned_london_properties
+    description: London property data scraped from the Rightmove website
+    columns:
+      - name: id
+        description: Unique identifier for a property
+      - name: Property_Link
+        description: A url to the property listing
+      - name: Listing_Type
+        description: Outlines whether the listing is new ('Added'), or whether the price has been reduced
+      - name: Property_type
+        description: One of the following - bungalow, detached, flat, park-home, semi-detached, terraced
+      - name: Tenure_Type
+        description: One of the following - Leasehold, Freehold, Share of Freehold, Commonhold
+      
+  - name: stg_postcode_lookup
+    description: A lookup table containing the zone and borough of every London borough
+

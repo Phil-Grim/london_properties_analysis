@@ -1,0 +1,26 @@
+version: 2
+
+models:
+
+  - name: ave_price_to_features
+    description: Contains features to be evaluated against average price, in order to see how a given feature impacts property price
+    columns:
+      - name: id
+        description: Unique identifier for a property
+      - name: Property_type
+        description: One of the following - bungalow, detached, flat, park-home, semi-detached, terraced
+      - name: Tenure_Type
+        description: One of the following - Leasehold, Freehold, Share of Freehold, Commonhold
+      - name: Lease_Length_Bands
+        description: Lease Length grouped so as to enbale clearer visualisation in Looker
+      - name: Size_Sqm_Bands
+        description: Size (in sqm) of the property grouped so as to enbale clearer visualisation in Looker
+      - name: Service_Charge_Bands
+        description: Property service charge (for leasehold properties) grouped so as to enbale clearer visualisation in Looker  
+
+  - name: ave_price_to_nearest_station
+    description: Contains property prices alongside their nearest station and borough. The table is used to calculate the average price of properties with a given nearest station - stations
+     that appear less than 5 times as a nearest station aren't included.    
+
+  - name: stations
+    description: Contains the distance from a properties nearest station and the sum of the distance to a properties 3 neares stations.
