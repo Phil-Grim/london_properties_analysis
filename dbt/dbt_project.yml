@@ -36,7 +36,9 @@ clean-targets:         # directories to be removed by `dbt clean`
 # using the `{{ config(...) }}` macro.
 
 models:
-  London_Properties_Analysis:
+  real-estate-data:
     # Applies to all files under models/example/
-    example:
-      +materialized: table
+    staging:
+      materialized: view
+    core:
+      materialized: incremental

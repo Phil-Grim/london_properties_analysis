@@ -2,7 +2,7 @@ version: 2
 
 models:
 
-  - name: ave_price_to_features
+  - name: price_to_features
     description: Contains features to be evaluated against average price, in order to see how a given feature impacts property price
     columns:
       - name: id
@@ -16,11 +16,7 @@ models:
       - name: Size_Sqm_Bands
         description: Size (in sqm) of the property grouped so as to enbale clearer visualisation in Looker
       - name: Service_Charge_Bands
-        description: Property service charge (for leasehold properties) grouped so as to enbale clearer visualisation in Looker  
+        description: Property service charge (for leasehold properties) grouped so as to enbale clearer visualisation in Looker    
 
-  - name: ave_price_to_nearest_station
-    description: Contains property prices alongside their nearest station and borough. The table is used to calculate the average price of properties with a given nearest station - stations
-     that appear less than 5 times as a nearest station aren't included.    
-
-  - name: stations
+  - name: peixe_to_stations
     description: Contains the distance from a properties nearest station and the sum of the distance to a properties 3 neares stations.

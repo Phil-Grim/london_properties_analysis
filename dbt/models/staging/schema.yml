@@ -25,7 +25,5 @@ models:
         description: One of the following - bungalow, detached, flat, park-home, semi-detached, terraced
       - name: Tenure_Type
         description: One of the following - Leasehold, Freehold, Share of Freehold, Commonhold
-      
-  - name: stg_postcode_lookup
-    description: A lookup table containing the zone and borough of every London borough
+
 

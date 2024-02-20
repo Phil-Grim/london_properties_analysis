@@ -1,4 +1,4 @@
---dbt run --select ave_price_to_features
+--dbt run --select ave_price_to_features_new
 
 {{ config(
     materialized='incremental',
@@ -12,6 +12,7 @@
 With t AS(
     SELECT id,
         Postcode,
+        Borough,
         Date_Listed,
         Price,
         Price_per_Bedroom,
@@ -42,18 +43,18 @@ SELECT id,
     Lease_Length_Years,
     Size_Sqm,
     Service_Charge,
-    CASE WHEN Lease_Length_Rounded <= 240 THEN concat(cast((Lease_Length_Rounded + 1) as string), ' - ', cast((Lease_Length_Rounded + 20) as string))
+    CASE WHEN Lease_Length_Rounded < 240 THEN concat(cast((Lease_Length_Rounded + 1) as string), ' - ', cast((Lease_Length_Rounded + 20) as string))
     WHEN Lease_Length_Rounded > 240 THEN '240+'
     ELSE NULL END AS Lease_Length_Bands,
     CASE WHEN Size_Sqm_Rounded <= 300 THEN concat(cast((Size_Sqm_Rounded + 1) as string), ' - ', cast((Size_Sqm_Rounded + 20) as string))
     ELSE NULL END AS Size_Sqm_Bands,
     CASE WHEN Service_Charge = 0 THEN '0'
-    WHEN Service_Charge_Rounded <= 12000 THEN concat(cast((Service_Charge_Rounded + 1) as string), ' - ', cast((Service_Charge_Rounded + 1000) as string))
+    WHEN Service_Charge_Rounded < 12000 THEN concat(cast((Service_Charge_Rounded + 1) as string), ' - ', cast((Service_Charge_Rounded + 1000) as string))
     WHEN Service_Charge_Rounded > 12000 THEN '12000+'
     ELSE NULL END AS Service_Charge_Bands
 FROM t
-JOIN {{ ref('stg_postcode_lookup') }} as l
-ON t.Postcode = l.Postcode
+-- JOIN {{ ref('stg_postcode_lookup') }} as l
+-- ON t.Postcode = l.Postcode
 
 
 {% if is_incremental() %}
