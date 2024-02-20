@@ -156,3 +156,5 @@ In set-up, do say that you don't have to create a VM - can use a separate enviro
 
 Might want some dbt tests at some point; documentation
 
+Will probably want a script / maybe a task that uploads the lookup table to bigquery and then creates an external table 
+
