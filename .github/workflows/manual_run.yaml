@@ -31,4 +31,4 @@ jobs:
 
       - name: Prefect Deploy
         run: |
-          python flows/web_to_gcs_bq.py --test=${{ github.events.inputs.test }}
+          python flows/web_to_gcs_bq.py --test=${{ github.event.inputs.test }}

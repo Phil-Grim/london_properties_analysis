@@ -396,6 +396,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     test = str2bool(args.test)
+    print(test)
 
     main_flow(test)
 
