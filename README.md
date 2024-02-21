@@ -160,10 +160,5 @@ If you want to reproduce this pipeline and play around with the data, see detail
 
 
 
-1. Might want some dbt tests at some point; documentation
-2. dbt - continuous integration
-3. Will probably want a script / maybe a task that uploads the lookup table to bigquery and then creates an external table 
- - Or maybe it can be used as a seed? Much smaller with the columns squashed
-4. Also explaining why Prefect + Guthub Actions both used
-5. Clearing / synthesising notes in apple notes
+
 
