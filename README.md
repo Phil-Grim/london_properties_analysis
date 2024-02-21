@@ -1,4 +1,4 @@
-# London Properties Analysis
+# :house_with_garden: London Properties Analysis
 
 ## Contents
 
