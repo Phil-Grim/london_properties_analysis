@@ -327,8 +327,21 @@ def save_to_gcp(df: pd.DataFrame) -> None:
 
     os.remove(input_path)
 
+@task(name='lookup_table',
+      log_prints=True)
+def lookup_to_bucket():
+    "Saves lookup csv to the GCS bucket in GCP"
 
-@task(name='external_table',
+    path = './london_postcodes.csv'
+
+    gcs_block = GcsBucket.load("london-properties")
+    gcs_block.upload_from_path(
+        from_path=path,
+        to_path=path
+    )
+
+
+@task(name='external_tables',
       log_prints=True)
 def create_external_table():
     """Creates an external table, if it doesn't already exist, pointing to the bucket storage location
@@ -341,6 +354,22 @@ def create_external_table():
             """CREATE EXTERNAL TABLE IF NOT EXISTS properties_dataset.raw_london_properties 
             OPTIONS (format = 'PARQUET', uris=['gs://london_property_data_evident-display-410312/raw_daily_data/succeeded/*.parquet'])"""
         )
+    
+    with BigQueryWarehouse(gcp_credentials=gcp_credentials) as warehouse:
+        warehouse.execute(
+            """CREATE EXTERNAL TABLE IF NOT EXISTS properties_dataset.london_postcode_lookup
+             (Postcode string,
+                In_Use string,
+                Borough string,
+                Zone string,
+                Postcode_area string,
+                Outcode string,
+                )
+                OPTIONS(field_delimiter = ',', format = 'csv', URIS = ['gs://london_property_data_evident-display-410312/london_postcodes.csv'],
+                    skip_leading_rows = 1)"""
+        )
+
+
 
 
 @flow(name='ingest_gcp',
@@ -352,6 +381,7 @@ def main_flow(test: bool = True):
     rows_list = scrape_page(properties_urls)
     df = clean(rows_list)
     save_to_gcp(df)
+    lookup_to_bucket()
 
     # creating the external table to point to the parquet files, if it doesn't already exist
     create_external_table()

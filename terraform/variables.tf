@@ -1,8 +1,3 @@
-locals {
-  data_lake_bucket = "london_property_data"
-}
-
-
 variable "credentials" {
   description = "My Credentials"
   default     = "<Path to your Service Account json file>"

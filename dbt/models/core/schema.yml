@@ -18,5 +18,5 @@ models:
       - name: Service_Charge_Bands
         description: Property service charge (for leasehold properties) grouped so as to enbale clearer visualisation in Looker    
 
-  - name: peixe_to_stations
+  - name: price_to_stations
     description: Contains the distance from a properties nearest station and the sum of the distance to a properties 3 neares stations.

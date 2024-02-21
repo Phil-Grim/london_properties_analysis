@@ -2,6 +2,15 @@
 
 ## Contents
 
+- [Problem Description](#problem-description)
+- [Technologies Used](#technologies-used)
+- [Data Pipeline](#the-data-pipeline)
+    - [The Cloud Intrastructure](#cloud-infrastructure)
+    - [Data Ingestion / Orchestration](#data-ingestion--orchestration)
+    - [Data Warehouse](#data-warehouse)
+    - [Transformations with dbt](#transformations-with-dbt)
+    - [Visualisations](#visualisations)
+- [Try it Yourself](#try-it-yourself)
 
 ## Problem Description
 
@@ -10,7 +19,7 @@ It can be difficult to find up-to-date, detailed data on for-sale property marke
 I've used Rightmove as the main data source for this project. As far as I'm aware, they don't provide a public API, so I built an ETL pipeline based on a python script which scrapes data from the website. 
 
 
-## Technology Used
+## Technologies Used
 
 The following tools were used:
 
@@ -40,30 +49,28 @@ The Terraform files in this project are available in the [terraform](terraform/)
 
 Data ingestion is orchestrated via Prefect and Github Actions. 
 
-[web_to_gcs_bq.py](flows/web_to_gcs_bq.py) consists of 5 intermediate tasks within a `main_flow()` function:
+[web_to_gcs_bq.py](flows/web_to_gcs_bq.py) consists of 6 intermediate tasks within a `main_flow()` function:
 
 1. A rightmove search url is created by `extract_rightmove_url()`. This has adjustable parameters which define the search results. This url is fed into `get_rightmove_results()`, which scrapes the result pages and returns a list of individual property listing urls. This function has a 'test' parameter. If set to True, the function will only return urls from the first page of results.
 2. This list of property listings is then fed into a `scrape_page()`, which scrapes relevant information from each property listing and returns a list of dictionaries. Each dictionary represents an information set for one property listing. 
 3. This list of dictionaries is then sent to `clean()`, which creates a pandas DataFrame and applies a schema specified in [dtypes.yaml](dtypes.yaml)
 4. The dataframe is then sent to `save_to_gcp()`, where it is saved as a parquet file before being uploaded to a GCS bucket, using credentials stored in a GCP Credentials block and a GCS Bucket block created in a Prefect Cloud account
-5. Finally, `create_external_table()`, again using the GCP Credentials block, creates - if it doesn't already exist - an external table in a specified BigQuery dataset which points to the GCS bucket location which is storing the parquet files.   
+5. The london_postcodes.csv lookup file is uploaded to the GCS bucket using the `lookup_to_bucket()` function. This matches all London postcodes to their respective Boroughs and Zones.
+6. Finally, `create_external_table()`, again using the GCP Credentials block, creates - if it doesn't already exist - two external tables in a specified BigQuery dataset. One holds the raw rightmove data - this points to the GCS bucket location which is storing the parquet files. The other holds the postcode lookup data  
 
-Github Actions is then used to schedule this Prefect flow. The [.github/workflows](.github/workflows/) folder contains [scheduled.yaml](.github/workflows/scheduled_run.yaml), which is set to run daily (using cron scheduling). This script, when triggered, creates an ubuntu VM runner and installs python 3.11 and the dependencies specified in [requirements.txt](requirements.txt) onto this VM. It then logs into a specified Prefect Cloud account from a terminal session and runs the Prefect flow. The script is currently configured to not run as a test (the test parameter is set to False). This can be changed by editing the yaml file.
+Github Actions is then used to schedule this Prefect flow. The [.github/workflows](.github/workflows/) folder contains [scheduled.yaml](.github/workflows/scheduled_run.yaml), which is set to run daily (using cron scheduling). 
+- This script, when triggered, creates an ubuntu VM runner and installs python 3.11 and the dependencies specified in [requirements.txt](requirements.txt) onto this VM. It then logs into a specified Prefect Cloud account from a terminal session and runs the Prefect flow. The script is currently configured to not run as a test (the test parameter is set to False). This can be changed by editing the yaml file.
 - The [.github/workflows](.github/workflows/) folder also contains two further yaml scripts, which do the same as the above, but with different triggers. One - [push_to_main_run.yaml](.github/workflows/push_to_main_run.yaml) - is triggered when changes are pushed to the main branch of the github repo. I've disabled this github action. The other - [manual_run.yaml](.github/workflows/manual_run.yaml) - can be triggered manually from the Actions tab within your github repo, and requires that the user specify whether it is a test run or not. 
 
 
 The [web_to_gcs_bq.py](flows/web_to_gcs_bq.py) is rate-limited, and so a full run (with test set to False) can take ~30 minutes to complete. This has been done to ensure that the sript doesn't make too many requests within a given period of time, something which could see your IP address blocked. For every 6 pages that the script scrapes, there is a randomised wait of between 2 and 5 seconds before moving to the next page. There is then a randomised wait between 10 and 25 seconds every 50 pages that the script scrapes added to this.
 
 
-**Also explaining why Prefect + Guthub Actions both used**
-
-
-
 ### Data Warehouse
 
 All data is warehoused in BigQuery.
 - The output of the ingestion script is stored as an external table within BigQuery
-- A lookup table is also held in BigQuery - this contains of London postcodes and their Borough. Lookup tables would typically be held as seeds from within a dbt project, but this lookup table was too large for that to be appropriate 
+- A postcode lookup table is also held in BigQuery (this has also been produced by the ingestion script) - this contains of London postcodes and their Borough. Lookup tables would typically be held as seeds from within a dbt project, but this lookup table was too large for that to be appropriate .
 - This data is then transformed in DBT and materialised into tables
     - The data is partitioned using the Date_Listed field - as most filtering is likely to occur on the date column
     - The data isn't clustered, as we are only handling a small quantity of data and so it isn't at this point efficient to cluster.
@@ -71,7 +78,7 @@ All data is warehoused in BigQuery.
 
 The following jinja code is used in dbt to materialise the tables:
 - the tables are materialised by Date_Listed on a "day" level of granularity
-- the tables are materialised incrementally. This means that the first time a model is run, the table by transforming all rows of source data. On subsequent rows, dbt transforms only the rows in your source data that you tell dbt to filter for. This limits the amount of data that needs to be transformed, reducing the runtime of transformations.
+- the tables are materialised incrementally. This means that the first time a model is run, the table is created by transforming all rows of source data. On subsequent rows, dbt transforms only the rows in your source data that you tell dbt to filter for. This limits the amount of data that needs to be transformed, reducing the runtime of transformations.
 
 
 ```sql
@@ -102,7 +109,7 @@ dbt defines and orchestrates the data transformations for this project - see the
 ![dbt dag](/images/dbt_dag.png)
 
 
-- Data is read from the `london_postcode_lookup` table in BigQuery, is cleaned, and is materialised as the `stg_postcode_lookup` view. 
+- Data is read from the `london_postcode_lookup` external table in BigQuery, is cleaned, and is materialised as the `stg_postcode_lookup` view. 
 - Data is read from the `raw_london_properties` external table in BigQuery, which references the parquet files produced by the ingestion script, and is cleaned and joined with the postcode lookup view to include a new 'Borough' column. This is materialised as a view called `stg_cleaned_london_properties`.
 - This view is then used to create two new models, which both materialise tables in BigQuery:
     - `price_to_features` - this table consists of property price (and price per bedroom) alongside several features which might influence property price. Lease length, size (sqm) and service charge are grouped into bands to allow for easier visualisation in Looker
@@ -149,12 +156,14 @@ ON stations_five_or_more.N_S = p.Nearest_station
 
 ## Try it yourself
 
-If you want to reproduce this pipeline and play around with the data, see detailed instructions here.
+If you want to reproduce this pipeline and play around with the data, see detailed instructions [here](reproduce.md).
 
-In set-up, do say that you don't have to create a VM - can use a separate environment to provision resources / play around with prefect script locally
-- maybe state what the use of having the VM is: the environment with which I could use terraform, and to develop python pipeline locally before using github actions to deploy the script
 
-Might want some dbt tests at some point; documentation
 
-Will probably want a script / maybe a task that uploads the lookup table to bigquery and then creates an external table 
+1. Might want some dbt tests at some point; documentation
+2. dbt - continuous integration
+3. Will probably want a script / maybe a task that uploads the lookup table to bigquery and then creates an external table 
+ - Or maybe it can be used as a seed? Much smaller with the columns squashed
+4. Also explaining why Prefect + Guthub Actions both used
+5. Clearing / synthesising notes in apple notes
 

@@ -29,7 +29,7 @@ resource "google_storage_bucket" "project-bucket" {
     }
   }
 }
-
+ 
 
 
 resource "google_bigquery_dataset" "project-dataset" {
