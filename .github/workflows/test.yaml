@@ -21,6 +21,10 @@ jobs:
         with:
           python-version: 3.11
 
+      - name: enter python editor
+        run: |
+          python
+
       - name: print thing
         run: |
           print(${{ github.events.inputs.test }})
