@@ -24,7 +24,7 @@ I've used Rightmove as the main data source for this project. As far as I'm awar
 The following tools were used:
 
 - Google Compute Engine - I used an Ubuntu (Linux distribution) Virtual Machine as the project environment
-- Terraform - an Infrastructure-as-Code (IaC) tool, which were used to provision resources in my Google Cloud Platform (GCP) account
+- Terraform - an Infrastructure-as-Code (IaC) tool, which was used to provision resources in my Google Cloud Platform (GCP) account
 - Prefect & Github Actions - for orchestration
 - Google Cloud Storage (GCS) - a GCS bucket was used for data lake storage
 - Google BigQuery - a data warehouse
@@ -71,13 +71,13 @@ The [web_to_gcs_bq.py](flows/web_to_gcs_bq.py) is rate-limited, and so a full ru
 All data is warehoused in BigQuery.
 - The output of the ingestion script containing scraped Rightmove data is stored as an external table within BigQuery
 - A postcode lookup table is also held in BigQuery (this has also been produced by the ingestion script) - this contains a list of London postcodes and their Boroughs. Lookup tables would typically be held as seeds from within a dbt project, but this lookup table was too large for that to be appropriate.
-- This data is then transformed in DBT and materialised into tables
+- This data is then transformed in DBT and materialised into tables.
     - The data is partitioned using the Date_Listed field - as most filtering is likely to occur on the date column.
     - The data isn't clustered, as we are only handling a small quantity of data and so it isn't at this point efficient to cluster.
 
 
 The following jinja code is used in dbt to materialise the tables:
-- the tables are materialised by Date_Listed on a "day" level of granularity
+- the tables are materialised by Date_Listed on a "day" level of granularity.
 - the tables are materialised incrementally. This means that the first time a model is run, the table is created by transforming all rows of source data. On subsequent runs, dbt transforms only the rows in your source data that you tell dbt to filter for. This limits the amount of data that needs to be transformed, reducing the runtime of transformations.
 
 

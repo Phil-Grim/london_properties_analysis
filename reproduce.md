@@ -24,7 +24,7 @@
 
 ## Prerequisites
 
-The project was developed using an Ubuntu VM instance created within my GCP account. This isn't required, and a different environment can be used, but these instructions assume that your local environment is an Ubuntu Ubuntu. I used the VM to provision cloud resources with Terraform, and to develop and test the prefect ingestion script.
+The project was developed using an Ubuntu VM instance created within my GCP account. This isn't required, and a different environment can be used, but these instructions assume that your local environment is an Ubuntu VM. I used the VM to provision cloud resources with Terraform, and to develop and test the prefect ingestion script.
 
 You need the following accounts (all either have free tiers or are available on a free trial):
 
@@ -35,11 +35,11 @@ You need the following accounts (all either have free tiers or are available on 
 
 ## Setup GCP Project
 
-Create a new project in the [Google Cloud Console](https://console.cloud.google.com/), and switch to that newly created project
+Create a new project in the [Google Cloud Console](https://console.cloud.google.com/), and switch to that newly created project.
 
 ## Create a Service Account and Generate a JSON Key
 
-Navigate to IAM & ADMIN &rarr; Service Accounts on the Google Cloud Console and create a new service account 
+Navigate to IAM & ADMIN &rarr; Service Accounts on the Google Cloud Console and create a new service account.
 
 This service account will be used by Prefect and DBT, and needs to be granted the following roles:
 - Viewer
@@ -86,7 +86,7 @@ cat .ssh/<KEY_FILENAME>.pub
 
 Copy the output, and within Google Cloud's Navigation Menu navigate to Compute > Compute Engine > Settings > Metadata. Here, navigate to the "SSH KEYS" tab, select "Edit" at the top and click "ADD ITEM" and paste the public key into the text box.
 
-Go to your VM and start it (Navigation Menu > Compute Engine > VM Instances > select the 3 dots to the right of your VM instance > select Start/Resume) - once it's started, copy the external IP that is generated - this will be added to the `config` file below.
+Go to your VM and start it (Navigation Menu > Compute Engine > VM Instances > select the 3 dots to the right of your VM instance > select Start/Resume). oOnce it's started, copy the external IP that is generated - this will be added to the `config` file below.
 
 Create a `config` file under your .ssh directory with the following:
 
@@ -135,7 +135,7 @@ bash Anaconda3-2023.09-Linux-x86_64.sh
 **Set the $GOOGLE_APPLICATIONS_CREDENTIALS env-var**
 - Make a new directory to store your service account credentials: ```mkdir -p .google/credentials```
 - Move the service account JSON key created earlier into this folder
-- Add the following to the .bashrc file: ```export GOOGLE_APPLICATION_CREDENTIALS=~/.google/credentials/<name-of-creds-file>.json```
+- Add the following to your .bashrc file (`nano .bashrc` to open an interactive editor in your terminal): ```export GOOGLE_APPLICATION_CREDENTIALS=~/.google/credentials/<name-of-creds-file>.json```
 - Then run ```source .bashrc```
 - Authenticate by running: ```gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS```
 
@@ -182,7 +182,7 @@ terraform --version
 git clone <forked_repo_https_url>
 ```
 
-- Once you've navigated the repo directory, run the following to install requirements:
+- Once you've navigated to the repo directory, run the following to install requirements:
 
 ```sh
 pip install -r requirements.txt
@@ -228,7 +228,7 @@ Check that the bucket and dataset have been created by navigating through the GC
 
 ## Prefect and Github Actions Setup
 
-go to Prefect Cloud to create a free account. Once logged in, create a [workspace](https://app.prefect.cloud/workspaces/create) and an [API key](https://app.prefect.cloud/my/api-keys)
+go to Prefect Cloud to create a free account. Once logged in, create a [workspace](https://app.prefect.cloud/workspaces/create) and an [API key](https://app.prefect.cloud/my/api-keys).
 
 In the Prefect Cloud UI, create 2 blocks:
 - Navigate to Blocks, and search for 'GCS Bucket'
@@ -252,7 +252,7 @@ These two secrets are referenced by the github action yaml scripts, and so the `
 - When enabled, Scheduled Run should run at 14:30 UTC every day. Run on Push will run when changes are pushed to main branch.
 - You can trigger the Manual Run by selecting 'Run workflow'. For the 'Run a test flow' input, select True if you want the flow to only scrape the first page of Rightmove property results, and False if you want the script to scrape all pages. 
 
->N.b The full run can take over 30 minutes, so it's best to use Manual Run at first and set 'Run a test flow' to True. Once you're confident that everything works, you can set 'Run a test flow' to false, or enable Scheduled Run and have the full flow run on a schedule.
+>N.b. the full run can take over 30 minutes, so it's best to use Manual Run at first and set 'Run a test flow' to True. Once you're confident that everything works, you can set 'Run a test flow' to false, or enable Scheduled Run and have the full flow run on a schedule.
 
 
 ## DBT Setup
@@ -269,7 +269,7 @@ sources:
 Create a [dbt cloud account](https://www.getdbt.com/signup). Once you've logged in, you'll be prompted to create a new project.
 
 You will need:
-- access to your BigQuery Data Warehouse - using the JSON key you generated from your GCP service account earlier
+- access to your BigQuery Data Warehouse - using the JSON key you generated from your GCP service account earlier.
 - admin access to your github repository (which you should've forked from this one), which is where the dbt project is stored.
 
 Follow these steps:
@@ -282,19 +282,19 @@ Follow these steps:
 
 Add the forked Github Repo to your project:
 
-1. From your github fork, copy the ssh link
+1. From your github forked repo, copy the ssh link
 2. In the dbt set up, select "git clone" from "Add repository from:", paste the ssh link and select import
-3. This will generate a deploy key. Copy this, and head back to yuor github repo > Settings > Security > Deploy keys > Add deploy key
+3. This will generate a deploy key. Copy this, and head back to your github repo > Settings > Security > Deploy keys > Add deploy key
 4. Paste the deploy key and name it something like "dbt". Remember to select "Allow write access" before adding the key
 5. In dbt Cloud, go to Account Settings > Projects > Select your project to get to "Project Details", and change the Project subdirectory to "dbt"
 
 
 ### Deploy dbt 
 
-Go to environments in dbt and create an environment - you can name this "production"
+Go to environments in dbt and create an environment - you can name this "production".
 - The Environment Type should be "deployment"
 
-Choose a BigQuery dataset - this is where the models will be created. My project used a dataset called "properties_production". Make sure this dataset exists in BigQuery - create it if it doesn't.
+Choose a BigQuery dataset - this is where the models will be created. My project used a dataset called "properties_production". Make sure this dataset exists in BigQuery, and create it if it doesn't.
 
 Go to jobs in dbt cloud and create a new job with the following parameters:
 1. Job Name - "dbt build" (you can call this what you'd like)
