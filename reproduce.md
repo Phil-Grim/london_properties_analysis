@@ -24,7 +24,9 @@
 
 ## Prerequisites
 
-The project was developed using an Ubuntu VM instance created within my GCP account. This isn't required, and a different environment can be used, but these instructions assume that your local environment is an Ubuntu VM. I used the VM to provision cloud resources with Terraform, and to develop and test the prefect ingestion script.
+The project was developed using an Ubuntu VM instance created within my GCP account. I used the VM to provision cloud resources with Terraform, and to develop and test the prefect ingestion script. However, the VM isn't required to run the pipeline, and if you don't wish to use a VM you can skip sections [Create Service Account & JSON Key](#create-a-service-account-and-generate-a-json-key) to [Connect VSCode to VM](#connect-vscode-to-vm). Ensure that the environment you're using has python 3.11 and terraform installed, the github repo cloned, and the environment variable set as referred to in section [Configure VM and install dependencies](#configure-vm-and-install-dependencies).  
+
+
 
 You need the following accounts (all either have free tiers or are available on a free trial):
 
@@ -66,7 +68,7 @@ You might need to enable the compute engine API if you haven't created a VM on y
 
 ## Setup SSH to VM
 
-[This link](https://cloud.google.com/compute/docs/connect/create-ssh-keys) explains how to create an SSH key pair on Linux/macOS/Windows, which you can use to connect to your VM
+[This link](https://cloud.google.com/compute/docs/connect/create-ssh-keys) explains how to create an SSH key pair on Linux/macOS/Windows, which you can use to connect to your VM. The below assumes you're using Linux or macOS.
 
 
 ```sh
@@ -191,7 +193,7 @@ pip install -r requirements.txt
 
 ## Provision Cloud Resources with Terraform
 
-`cd` to the terraform directory within your VM and edit the [variables.tf](terraform/variables.tf) file with the relevant information from your setup:
+`cd` to the terraform directory and edit the [variables.tf](terraform/variables.tf) file with the relevant information from your setup:
 
 N.b. I'd recommend leaving the name of the bucket and dataset as they are; otherwise you'll need to amend the prefect flow and dbt models too:
 
