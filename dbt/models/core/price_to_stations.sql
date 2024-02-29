@@ -53,7 +53,6 @@ SELECT id,
     Borough,
     Nearest_station,
     Distance_From_Nearest_Station,
-
     ROUND(Distance_From_Nearest_Station_Miles + Distance_From_Second_Nearest_Station_Miles + Distance_From_Third_Nearest_Station_Miles, 2) AS Total_Distance_From_Three_Nearest_Stations
 FROM list_date_rank as p
 -- JOIN {{ ref('stg_postcode_lookup') }} as l
