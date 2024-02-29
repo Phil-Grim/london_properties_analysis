@@ -55,12 +55,12 @@ SELECT id,
 FROM t
 -- JOIN {{ ref('stg_postcode_lookup') }} as l
 -- ON t.Postcode = l.Postcode
-
+WHERE Bedrooms < 12 AND Property_Type != 'Block of Apartments'
 
 {% if is_incremental() %}
 
 -- {{This}} refers to target table
 -- So, we're adding rows where rows with the same id and Date_listed aren't already in the BigQuery table
-where concat(id, ' ', Date_Listed) NOT IN (SELECT concat(id, ' ', Date_Listed) FROM {{this}})
+and concat(id, ' ', Date_Listed) NOT IN (SELECT concat(id, ' ', Date_Listed) FROM {{this}})
 
 {% endif %}
