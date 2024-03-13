@@ -157,7 +157,9 @@ All 3 pages can be filtered further by date (which refers to the listing date) a
 
 ![Summary Stats](images/Looker_Summary_Statistics.png)
 
+
 ![Station Stats](images/Looker_Stations.png)
+
 
 ![Leasehold Stats](images/Looker_Leaseholds.png)
 
