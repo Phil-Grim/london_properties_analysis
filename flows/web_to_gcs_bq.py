@@ -131,6 +131,9 @@ def scrape_page(url_suffixs: list) -> list:
             page = requests.get(url, headers=headers, timeout=40)
         
         soup = bs(page.content, 'html.parser')
+        if '"status":404' in f'{soup}': # moving to the next loop iteration if the url cannot be found
+            print('url could not be found')
+            continue
 
         # Assigning an ID to the property using the url 
         id = re.findall("([0-9]{7,15})", url)[0]
@@ -143,7 +146,7 @@ def scrape_page(url_suffixs: list) -> list:
             print(f'successfully extracted description for property at {url}')
         except IndexError:
             print(f'no description for property at {url}')
-            print(f'this is the result for soup: {soup}')
+        
 
         # Extracting a JSON array from the HTML variable PAGE_MODEL, which contains much of the data we require
         script_elements = soup.find_all('script')
