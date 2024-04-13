@@ -140,8 +140,10 @@ def scrape_page(url_suffixs: list) -> list:
         data = soup.find_all('div', class_="STw8udCxUaBUMfOOZu0iL _3nPVwR0HZYQah5tkVJHFh5")
         try:
             description = data[0].text
+            print(f'successfully extracted description for property at {url}')
         except IndexError:
             print(f'no description for property at {url}')
+            print(f'this is the result for data: {soup}')
 
         # Extracting a JSON array from the HTML variable PAGE_MODEL, which contains much of the data we require
         script_elements = soup.find_all('script')
