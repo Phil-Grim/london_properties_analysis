@@ -60,7 +60,7 @@ def get_rightmove_results(url: str, test: bool) -> list:
     property listing URLs."""
  
     headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+        "User-Agent": "Mozilla/5.0 (X11; Linux i686; rv:124.0) Gecko/20100101 Firefox/124.0"
     }
     search = requests.get(url, headers=headers)
     soup = bs(search.content, "html.parser")
@@ -119,7 +119,7 @@ def scrape_page(url_suffixs: list) -> list:
         url = url_base + suffix
 
         headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+        "User-Agent": "Mozilla/5.0 (X11; Linux i686; rv:124.0) Gecko/20100101 Firefox/124.0"
         }
 
         try:
