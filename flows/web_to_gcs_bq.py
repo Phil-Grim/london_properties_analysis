@@ -143,7 +143,7 @@ def scrape_page(url_suffixs: list) -> list:
             print(f'successfully extracted description for property at {url}')
         except IndexError:
             print(f'no description for property at {url}')
-            print(f'this is the result for data: {soup}')
+            print(f'this is the result for soup: {soup}')
 
         # Extracting a JSON array from the HTML variable PAGE_MODEL, which contains much of the data we require
         script_elements = soup.find_all('script')
@@ -274,9 +274,9 @@ def scrape_page(url_suffixs: list) -> list:
         data_rows.append(row)
 
         # rate limiting:
-        t  = random.uniform(2,5)
+        t  = random.uniform(5,10)
         if index % 50 == 0 and index != 0:
-            t = t * 5
+            t = t * 3
             print(f"Sleeping {t:.2f} seconds")
             time.sleep(t)
         elif index % 6 == 0 and index != 0:
